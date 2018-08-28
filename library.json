@@ -1,0 +1,23 @@
+{
+    "name":"LibRobus",
+    "description":"LibRobus",
+    "keywords":"robus",
+    "authors":
+    [
+      {
+        "name": "Jean-Samuel Lauzon",
+        "maintainer": true
+      },
+      {
+        "name": "Jonathan Vincent"
+      }
+    ],
+
+    "dependencies":
+    [
+      {"name": "Adafruit INA219"},
+      {"name": "Adafruit TCS34725"},
+      {"name": "LiquidCrystal_I2C"},
+      {"name": "SPI"}
+    ]
+  }
