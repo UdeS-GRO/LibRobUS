@@ -66,20 +66,6 @@ SoftTimer timer[MAX_N_TIMER];
   String BlUETOOTH_MSG = "";
   // Timer
 
-/** Function that defines the default callback when data is receive from bluetooth
-*/
-void BlUETOOTH_defaultCallback(){
-  String inputString;
-  while (serialBT.available()) {
-    // get the new byte:
-    char inChar = (char)serialBT.read();
-    // add it to the inputString:
-    inputString += inChar;
-    }
-  
-  BlUETOOTH_MSG = inputString;
-}
-
 /** Function to initialize all variables to use in code
 */
 void BoardInit(){
@@ -105,7 +91,6 @@ void BoardInit(){
 
   // Init serial bluetooth
   Serial2.begin(BAUD_RATE_BLUETOOTH);
-  BT_func = BlUETOOTH_defaultCallback;
 };
 
 
@@ -548,6 +533,40 @@ void BlUETOOTH_setCallback(void (*f)()){
 void serialEvent2(){
   BT_func();
 };
+
+/** Function that defines the default callback when data is receive from bluetooth
+@note this can be used as a callback
+
+*/
+void BlUETOOTH_read(){
+  String inputString;
+  while (serialBT.available()) {
+    // get the new byte:
+    char inChar = (char)serialBT.read();
+    // add it to the inputString:
+    inputString += inChar;
+    }
+  
+  BlUETOOTH_MSG = inputString;
+}
+
+/** Function that defines the default callback when data is receive from bluetooth
+
+@return the received string
+*/
+String BlUETOOTH_read(){
+  String inputString;
+  while (serialBT.available()) {
+    // get the new byte:
+    char inChar = (char)serialBT.read();
+    // add it to the inputString:
+    inputString += inChar;
+    }
+  
+  return inputString;
+}
+
+
 
 /** allow inline printing (c++ style);
 */
