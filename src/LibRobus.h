@@ -538,7 +538,7 @@ void serialEvent2(){
 @note this can be used as a callback
 
 */
-void BlUETOOTH_read(){
+void BlUETOOTH_readCallback(){
   String inputString;
   while (serialBT.available()) {
     // get the new byte:
@@ -546,7 +546,6 @@ void BlUETOOTH_read(){
     // add it to the inputString:
     inputString += inChar;
     }
-  
   BlUETOOTH_MSG = inputString;
 }
 
@@ -562,11 +561,8 @@ String BlUETOOTH_read(){
     // add it to the inputString:
     inputString += inChar;
     }
-  
   return inputString;
 }
-
-
 
 /** allow inline printing (c++ style);
 */
