@@ -73,12 +73,13 @@ void BoardInit(){
   Serial.begin(9600);
 
   // Motors init
-  motor[LEFT].init(5, 30);
-  motor[RIGHT].init(6, 31);
+  motor[LEFT].init(6, 31);
+  motor[RIGHT].init(5, 30);
 
   // Encoders init
-  encoder[LEFT].init(34, A14);
-  encoder[RIGHT].init(35, A15);
+  encoder[LEFT].init(35, A15);
+  encoder[RIGHT].init(34, A14);
+    
 
   // Audio player init
   audio.init(Serial3);
@@ -109,7 +110,7 @@ void MOTOR_SetSpeed(uint8_t id, float speed){
     Serial.println("Invalid motor id!");
     return;
   }
-  if(id==0){
+  if(id==1){
     speed *= -1; // left motor is inverted
   }
   motor[id].setSpeed(speed);
@@ -453,7 +454,7 @@ number of repetition
 @note if nrep is negative or is not set, the timer will run forever (default);
 */
 void SOFT_TIMER_SetRepetition(uint8_t id, int32_t nrep){
-  if(id<0 || id>MAX_N_TIMER){
+  if(id<0){
     Serial.println("Invalid timer id!");
     return;
   }
