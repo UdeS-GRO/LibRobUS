@@ -16,8 +16,6 @@
     "dependencies":
     [
       {"name": "Adafruit INA219"},
-      {"name": "Adafruit TCS34725"},
-      {"name": "LiquidCrystal_I2C"},
-      {"name": "SPI"}
+      {"name": "LiquidCrystal_I2C"}
     ]
   }

@@ -24,7 +24,6 @@ General librairies for Robus robot
 #include <SoftTimer/SoftTimer.h>
 
 // Third party librairies
-#include <Adafruit_TCS34725.h>
 
 
 // Defines
@@ -49,8 +48,6 @@ DisplayLCD display;
 ArduinoX AX;
 Servo servo[2];
 
-// SerialBluetooth serialBT;
-Adafruit_TCS34725 colorSensor;
 VexQuadEncoder vex;
 SoftTimer timer[MAX_N_TIMER];
 
