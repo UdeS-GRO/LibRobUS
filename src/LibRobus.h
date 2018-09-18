@@ -521,7 +521,7 @@ void BLUETOOTH_println(String msg){
 @param f
 a void fonction without parameters
 */
-void BlUETOOTH_setCallback(void (*f)()){
+void BLUETOOTH_setCallback(void (*f)()){
   BT_func = f;
 };
 
@@ -536,7 +536,7 @@ void serialEvent2(){
 @note this can be used as a callback
 
 */
-void BlUETOOTH_readCallback(){
+void BLUETOOTH_readCallback(){
   String inputString;
   while (serialBT.available()) {
     // get the new byte:
@@ -551,7 +551,7 @@ void BlUETOOTH_readCallback(){
 
 @return the received string
 */
-String BlUETOOTH_read(){
+String BLUETOOTH_read(){
   String inputString;
   while (serialBT.available()) {
     // get the new byte:
