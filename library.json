@@ -12,10 +12,10 @@
         "name": "Jonathan Vincent"
       }
     ],
-
     "dependencies":
     [
       {"name": "Adafruit INA219"},
       {"name": "LiquidCrystal_I2C"}
-    ]
+    ],
+    "version": "1.0.0"
   }

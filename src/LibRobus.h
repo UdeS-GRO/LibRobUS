@@ -6,14 +6,13 @@ General librairies for Robus robot
 */
 #ifndef LibRobus_H_
 #define LibRobus_H_
-// Includes
 
+// Includes
 #include <Servo.h>
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
-// custom librairies
-// #include <SerialBluetooth/SerialBluetooth.h>
+// Custom librairies
 #include <ArduinoX/ArduinoX.h>
 #include <MotorControl/MotorControl.h>
 #include <LS7366Counter/LS7366Counter.h>
@@ -22,8 +21,6 @@ General librairies for Robus robot
 #include <SRF04Sonar/SRF04Sonar.h>
 #include <VexQuadEncoder/VexQuadEncoder.h>
 #include <SoftTimer/SoftTimer.h>
-
-// Third party librairies
 
 
 // Defines
@@ -35,62 +32,78 @@ General librairies for Robus robot
 #define SERVO_1 0
 #define SERVO_2 1
 
+#define SONAR_1 0
+#define SONAR_2 1
+
 #define MAX_N_TIMER 5 // max number of timers
+#define BAUD_RATE_SERIAL0 9600
 #define BAUD_RATE_BLUETOOTH 115200
-#define serialBT Serial2
+#define SerialBT Serial2
+#define SerialAudio Serial3
 
 // Objects creation
-MotorControl motor[2];
-LS7366Counter encoder[2];
-AudioPlayer audio;
-SRF04Sonar sonar;
-DisplayLCD display;
-ArduinoX AX;
-Servo servo[2];
+  MotorControl __motor__[2];
+  LS7366Counter __encoder__[2];
+  AudioPlayer __audio__;
+  SRF04Sonar __sonar__[2];
+  DisplayLCD __display__;
+  ArduinoX __AX__;
+  Servo __servo__[2];
 
-VexQuadEncoder vex;
-SoftTimer timer[MAX_N_TIMER];
+  VexQuadEncoder __vex__;
+  SoftTimer __timer__[MAX_N_TIMER];
 
 // Global variables
-  // LCD display
-  uint8_t display_row = 0;
-  uint8_t display_col = 0;
-
   // Servomotors
-  const uint8_t SERVO_PINS[2] = {33, 7};
-  const uint8_t SERVO_RANGE[2] = {0, 180}; // 0 to 180 degree
+  const uint8_t __SERVO_PINS__[2] = {33, 7};
+  const uint8_t __SERVO_RANGE__[2] = {0, 180}; // 0 to 180 degree
+  // Bluetooth
   void (*BT_func)() = NULL;
   String BlUETOOTH_MSG = "";
-  // Timer
+  // Sonars
+  const uint8_t __SONAR_ECHO_PINS__[2] = {22, 24};
+  const uint8_t __SONAR_TRIG_PINS__[2] = {23, 25};
 
-/** Function to initialize all variables to use in code
+
+/** Function to initialize most variables to use in code
 */
 void BoardInit(){
   // Initialize debug communication on Serial0
-  Serial.begin(9600);
-
+  Serial.begin(BAUD_RATE_SERIAL0);
   // Motors init
-  motor[LEFT].init(6, 31);
-  motor[RIGHT].init(5, 30);
+  __motor__[LEFT].init(6, 31);
+  __motor__[RIGHT].init(5, 30);
 
   // Encoders init
-  encoder[LEFT].init(35, A15);
-  encoder[RIGHT].init(34, A14);
-    
-
-  // Audio player init
-  audio.init(Serial3);
-
-  // Display init
-  display.init();
+  __encoder__[LEFT].init(35, A15);
+  __encoder__[RIGHT].init(34, A14);
+  
+  // Sonars
+  __sonar__[0].init(__SONAR_ECHO_PINS__[0], __SONAR_TRIG_PINS__[0]);
+  __sonar__[1].init(__SONAR_ECHO_PINS__[1], __SONAR_TRIG_PINS__[1]);
 
   // Init ArduinoX
-  AX.init();
-
-  // Init serial bluetooth
-  Serial2.begin(BAUD_RATE_BLUETOOTH);
+  __AX__.init();
 };
 
+/** Function to initialize audio variables
+*/
+void AudioInit(){
+  __audio__.init(SerialAudio);
+}
+
+/** Function to initialize Display variables
+*/
+void DisplayInit(){
+  __display__.init();
+}
+
+/** Function to initialize Bluetooth variables
+*/
+void BluetoothInit(){
+  // Init serial bluetooth
+  SerialBT.begin(BAUD_RATE_BLUETOOTH);
+}
 
 
 
@@ -110,7 +123,7 @@ void MOTOR_SetSpeed(uint8_t id, float speed){
   if(id==1){
     speed *= -1; // left motor is inverted
   }
-  motor[id].setSpeed(speed);
+  __motor__[id].setSpeed(speed);
 };
 
 
@@ -127,9 +140,9 @@ int32_t ENCODER_Read(uint8_t id){
     return 0;
   }
   if(id == 0){
-    return -encoder[id].read();// Left motor is inverted
+    return -__encoder__[id].read();// Left motor is inverted
   }else{
-    return encoder[id].read();
+    return __encoder__[id].read();
   }
 };
 
@@ -143,7 +156,7 @@ void ENCODER_Reset(uint8_t id){
     Serial.println("Invalid encoder id!");
     return;
   }
-  encoder[id].reset();// Reset counter
+  __encoder__[id].reset();// Reset counter
 };
 
 /** Function to read the number of pulses from a counter, then reset its value
@@ -159,9 +172,9 @@ int32_t ENCODER_ReadReset(uint8_t id){
     return 0;
   }
   if(id){
-    return -encoder[id].readReset();// Rigth motor is inverted
+    return -__encoder__[id].readReset();// Rigth motor is inverted
   }else{
-    return encoder[id].readReset();
+    return __encoder__[id].readReset();
   }
 };
 
@@ -172,7 +185,7 @@ This function is non-blocking
 the index of the track (in last modify order (starts from 1))
 */
 void AUDIO_Play(uint16_t track){
-  audio.play(track);
+  __audio__.play(track);
 };
 
 /** Function to play an audio track on mp3 player
@@ -182,37 +195,37 @@ This function is blocking(code will stay in this function until track is over)
 the index of the track (in last modify order (starts from 1))
 */
 void AUDIO_PlayBlocking(uint16_t track){
-  audio.playBlocking(track);
+  __audio__.playBlocking(track);
 };
 
 /** Function to play next audio track on mp3 player
 */
 void AUDIO_Next(){
-  audio.next();
+  __audio__.next();
 };
 
 /** Function to play previous audio track on mp3 player
 */
 void AUDIO_Previous(){
-  audio.previous();
+  __audio__.previous();
 };
 
 /** Function to pause currently playing audio track on mp3 player
 */
 void AUDIO_Pause(){
-  audio.pause();
+  __audio__.pause();
 };
 
 /** Function to resume currently paused audio track on mp3 player
 */
 void AUDIO_Resume(){
-  audio.resume();
+  __audio__.resume();
 };
 
 /** Function to stop current audio track on mp3 player
 */
 void AUDIO_Stop(){
-  audio.stop();
+  __audio__.stop();
 };
 
 /** Function to poll the the state of the current track
@@ -220,7 +233,7 @@ void AUDIO_Stop(){
 @return true if song is finished, else false
 */
 bool AUDIO_IsFinish(){
-  return audio.isFinished();
+  return __audio__.isFinished();
 };
 
 /** Function set the audio volume of the mp3 player
@@ -229,28 +242,21 @@ bool AUDIO_IsFinish(){
 floating value between [0.0, 1.0]
 */
 void AUDIO_SetVolume(float volume){
-  audio.setVolume(volume);
-};
-
-/** Function to set up digital pins of the sonars
-
-@param trigPin
-pin number that triggers the sonar
-
-@param echoPin
-pin number that read the echo
-*/
-void SONAR_SetPins(uint8_t echoPin, uint8_t trigPin){
-  sonar.init(echoPin, trigPin);
+  __audio__.setVolume(volume);
 };
 
 /** Function to estimate the range with the sonar
-
+@param id
+identification of the sonar
 @return range
 Estimation of the range in meters.
 */
-float SONAR_GetRange(){
-  return sonar.getRange();
+float SONAR_GetRange(uint8_t id){
+  if(id<0 || id>1){
+    Serial.println("Invalid sonar id!");
+    return 0;
+  }
+  return __sonar__[id].getRange();
 };
 
 /** Function to set cursor position
@@ -263,7 +269,7 @@ row index [0, 3]
 column index [0, 19]
 */
 void DISPLAY_SetCursor(uint8_t row, uint8_t column){
-  display.setCursor(column,row);
+  __display__.setCursor(column,row);
 };
 
 /** Function to print message at the cursor position
@@ -273,41 +279,41 @@ void DISPLAY_SetCursor(uint8_t row, uint8_t column){
 Alphanumeric string message
 */
 void DISPLAY_Printf(String msg){
-  display.print(msg);
+  __display__.print(msg);
 };
 
 /** Function to move cursor to beginning of next row
 @note For I2C 4x20 LCD display
 */
 void DISPLAY_NewLine(){
-  display.newLine();
+  __display__.newLine();
 };
 
 /** Function to clear the display
 @note For I2C 4x20 LCD display
 */
 void DISPLAY_Clear(){
-  display.clear();
+  __display__.clear();
 };
 
 /** Function that return the voltage input of ArduinoX
 @return volatge in V
 */
 float AX_GetVoltage(){
-  return AX.getVoltage();
+  return __AX__.getVoltage();
 };
 
 /** Function that return the current input of ArduinoX
 @return current in mA
 */
 float AX_GetCurrent(){
-  return AX.getCurrent();
+  return __AX__.getCurrent();
 };
 
 /** Function turn on the onboard buzzer
 */
 void AX_BuzzerON(){
-  AX.buzzerOn();
+  __AX__.buzzerOn();
 };
 
 /** Function turn on the onboard buzzer
@@ -315,7 +321,7 @@ void AX_BuzzerON(){
 frequency of a 50% dutycycle square wave
 */
 void AX_BuzzerON(uint32_t freq){
-  AX.buzzerFreq(freq);
+  __AX__.buzzerFreq(freq);
 };
 
 /** Function turn on the onboard buzzer
@@ -326,21 +332,21 @@ frequency of a 50% dutycycle square wave
 time (ms) buzzer is active
 */
 void AX_BuzzerON(uint32_t freq, uint64_t duration){
-  AX.buzzerFreq(freq, duration);
+  __AX__.buzzerFreq(freq, duration);
 };
 
 
 /** Function turn off the onboard buzzer
 */
 void AX_BuzzerOFF(){
-  AX.buzzerOff();
+  __AX__.buzzerOff();
 };
 
 /** Function to inquire the battery level
 return true if batterie is low, else false
 */
 bool AX_IsLowBat(){
-  return AX.isLowBat();
+  return __AX__.isLowBat();
 };
 
 /** Function to inquire a bumber state
@@ -350,7 +356,7 @@ index of the desired bumper (LEFT:0, RIGHT:1, FRONT:2, REAR:3)
 return true if bumper is pressed, else false
 */
 bool AX_IsBumper(uint8_t id){
-  return AX.isBumper(id);
+  return __AX__.isBumper(id);
 };
 
 /** Function to raw imput fromt infrared captor
@@ -360,7 +366,7 @@ index of the desired IR module [0, 3]
 return number on 16bits
 */
 uint16_t AX_ReadIR(uint8_t id){
-  return AX.readIR(id);
+  return __AX__.readIR(id);
 };
 
 
@@ -370,7 +376,7 @@ index of the desired servomotor [0, 1]
 */
 void SERVO_Enable(uint8_t id){
   if(id >= 0 && id < 2){
-      servo[id].attach(SERVO_PINS[id]);
+      __servo__[id].attach(__SERVO_PINS__[id]);
   }else{
     Serial.println("Invalid servo id!");
   }
@@ -382,7 +388,7 @@ index of the desired servomotor [0, 1]
 */
 void SERVO_Disable(uint8_t id){
   if(id >= 0 && id < 2){
-      servo[id].detach();
+      __servo__[id].detach();
   }else{
     Serial.println("Invalid servo id!");
   }
@@ -402,11 +408,11 @@ void SERVO_SetAngle(uint8_t id, uint8_t angle){
     Serial.println("Invalid servo id!");
   return;
   }
-  if(angle < SERVO_RANGE[0] || angle > SERVO_RANGE[1]){
+  if(angle < __SERVO_RANGE__[0] || angle > __SERVO_RANGE__[1]){
     Serial.println("Servo angle is out of range!");
   return;
   }
-  servo[id].write(angle);
+  __servo__[id].write(angle);
 }
 
 /** Function to set a callback to a timer
@@ -422,7 +428,7 @@ void SOFT_TIMER_SetCallback(uint8_t id, void (*func)()){
     Serial.println("Invalid timer id!");
     return;
   }
-  timer[id].setCallback(func);
+  __timer__[id].setCallback(func);
 };
 
 /** Function to set a delay between callback of a timer
@@ -438,7 +444,7 @@ void SOFT_TIMER_SetDelay(uint8_t id, unsigned long delay){
     Serial.println("Invalid timer id!");
     return;
   }
-  timer[id].setDelay(delay);
+  __timer__[id].setDelay(delay);
 };
 
 /** Function to a number of repetition of the callback before desabling it
@@ -455,7 +461,7 @@ void SOFT_TIMER_SetRepetition(uint8_t id, int32_t nrep){
     Serial.println("Invalid timer id!");
     return;
   }
-  timer[id].setRepetition(nrep);
+  __timer__[id].setRepetition(nrep);
 };
 
 /** Function to a enable a timer
@@ -468,7 +474,7 @@ void SOFT_TIMER_Enable(uint8_t id){
     Serial.println("Invalid timer id!");
     return;
   }
-  timer[id].enable();
+  __timer__[id].enable();
 };
 
 /** Function to a disable a timer
@@ -481,7 +487,7 @@ void SOFT_TIMER_Disable(uint8_t id){
     Serial.println("Invalid timer id!");
     return;
   }
-  timer[id].disable();
+  __timer__[id].disable();
 };
 
 
@@ -491,7 +497,7 @@ void SOFT_TIMER_Disable(uint8_t id){
 */
 void SOFT_TIMER_Update(){
   for(uint8_t id = 0; id<MAX_N_TIMER; id++){
-    timer[id].update();
+    __timer__[id].update();
   };
 };
 
@@ -502,7 +508,7 @@ void SOFT_TIMER_Update(){
 a string message to be sent via bluetooth to paired
 */
 void BLUETOOTH_print(String msg){
-  serialBT.print(msg);
+  SerialBT.print(msg);
 };
 
 /** Function to write a message to Bluetooth module with a end line
@@ -512,7 +518,7 @@ void BLUETOOTH_print(String msg){
 a string message to be sent via bluetooth to paired
 */
 void BLUETOOTH_println(String msg){
-  serialBT.println(msg);
+  SerialBT.println(msg);
 };
 
 /** Function to set callback when data from BlueTooth
@@ -538,9 +544,9 @@ void serialEvent2(){
 */
 void BLUETOOTH_readCallback(){
   String inputString;
-  while (serialBT.available()) {
+  while (SerialBT.available()) {
     // get the new byte:
-    char inChar = (char)serialBT.read();
+    char inChar = (char)SerialBT.read();
     // add it to the inputString:
     inputString += inChar;
     }
@@ -553,9 +559,9 @@ void BLUETOOTH_readCallback(){
 */
 String BLUETOOTH_read(){
   String inputString;
-  while (serialBT.available()) {
+  while (SerialBT.available()) {
     // get the new byte:
-    char inChar = (char)serialBT.read();
+    char inChar = (char)SerialBT.read();
     // add it to the inputString:
     inputString += inChar;
     }
