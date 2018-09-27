@@ -55,7 +55,7 @@ General librairies for Robus robot
 
 // Global variables
   // Servomotors
-  const uint8_t __SERVO_PINS__[2] = {33, 7};
+  const uint8_t __SERVO_PINS__[2] = {4, 7};
   const uint8_t __SERVO_RANGE__[2] = {0, 180}; // 0 to 180 degree
   // Bluetooth
   void (*BT_func)() = NULL;
@@ -84,6 +84,10 @@ void BoardInit(){
 
   // Init ArduinoX
   __AX__.init();
+
+  // Servos
+  SERVO_Enable(0);
+  SERVO_Enable(1);
 };
 
 /** Function to initialize audio variables
