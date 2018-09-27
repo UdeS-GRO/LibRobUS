@@ -86,8 +86,8 @@ void BoardInit(){
   __AX__.init();
 
   // Servos
-  SERVO_Enable(0);
-  SERVO_Enable(1);
+  __servo__[0].attach(__SERVO_PINS__[0]); // Fonction SERVO_Enable n'existe pas
+  __servo__[1].attach(__SERVO_PINS__[1]);
 };
 
 /** Function to initialize audio variables
