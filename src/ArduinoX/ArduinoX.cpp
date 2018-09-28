@@ -12,8 +12,9 @@ void ArduinoX::init(){
   digitalWrite(BUZZER_PIN, LOW);
   pinMode(LOWBAT_PIN, INPUT);
   ina219.begin();
-  for(uint8_t i = 0; i < 4; i++){
-    pinMode(BUMPER_PIN[i], INPUT);
+  for(uint8_t id = 0; id < 2; id++){
+    __motor__[id].init(MOTOR_PWM_PIN[id], MOTOR_DIR_PIN[id]);
+    __encoder__[id].init(COUNTER_SLAVE_PIN[id], COUNTER_FLAG_PIN[id]);
   }
 }
 
@@ -53,18 +54,45 @@ bool ArduinoX::isLowBat(){
   return !digitalRead(LOWBAT_PIN);
 }
 
-bool ArduinoX::isBumper(uint8_t id){
-  if(id<0 || id>4){
-    Serial.println("Invalid Bumper id!");
-    return false;
+void ArduinoX::setSpeedMotor(uint8_t id, float speed){
+  if(id<0 || id>1){
+    Serial.println("Invalid motor id!");
+    return;
   }
-  return digitalRead(BUMPER_PIN[id]);
+  if(id==1){
+    speed *= -1; // left motor is inverted
+  }
+  __motor__[id].setSpeed(speed);
 }
 
-uint16_t ArduinoX::readIR(uint8_t id){
-  if(id<0 || id>4){
-    Serial.println("Invalid IR id!");
+int32_t ArduinoX::readEncoder(uint8_t id){
+  if(id<0 || id>1){
+    Serial.println("Invalid encoder id!");
     return 0;
   }
-  return analogRead(IR_PIN[id]);
+  if(id == 0){
+    return -__encoder__[id].read();// Left motor is inverted
+  }else{
+    return __encoder__[id].read();
+  }
+}
+
+int32_t ArduinoX::readResetEncoder(uint8_t id){
+  if(id<0 || id>1){
+    Serial.println("Invalid encoder id!");
+    return 0;
+  }
+  if(id){
+    return -__encoder__[id].readReset();// Left motor is inverted
+  }else{
+    return __encoder__[id].readReset();
+  }
+}
+
+void ArduinoX::resetEncoder(uint8_t id){
+  if(id<0 || id>1){
+    Serial.println("Invalid encoder id!");
+    return;
+  }
+  __encoder__[id].reset();// Reset counter
 }

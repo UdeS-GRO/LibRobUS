@@ -8,19 +8,13 @@ General librairies for Robus robot
 #define LibRobus_H_
 
 // Includes
-#include <Servo.h>
-#include <Arduino.h>
-#include <SoftwareSerial.h>
-
-// Custom librairies
-#include <ArduinoX/ArduinoX.h>
-#include <MotorControl/MotorControl.h>
-#include <LS7366Counter/LS7366Counter.h>
-#include <AudioPlayer/AudioPlayer.h>
-#include <DisplayLCD/DisplayLCD.h>
-#include <SRF04Sonar/SRF04Sonar.h>
-#include <VexQuadEncoder/VexQuadEncoder.h>
-#include <SoftTimer/SoftTimer.h>
+  // Custom librairies
+  #include <Robus/Robus.h>
+  #include <ArduinoX/ArduinoX.h>
+  #include <AudioPlayer/AudioPlayer.h>
+  #include <DisplayLCD/DisplayLCD.h>
+  #include <VexQuadEncoder/VexQuadEncoder.h>
+  #include <SoftTimer/SoftTimer.h>
 
 
 // Defines
@@ -29,40 +23,24 @@ General librairies for Robus robot
 #define FRONT 2
 #define REAR 3
 
-#define SERVO_1 0
-#define SERVO_2 1
-
-#define SONAR_1 0
-#define SONAR_2 1
-
-#define MAX_N_TIMER 5 // max number of timers
+#define MAX_N_TIMER 5 // Nombre maximum de Chronometres
 #define BAUD_RATE_SERIAL0 9600
 #define BAUD_RATE_BLUETOOTH 115200
 #define SerialBT Serial2
 #define SerialAudio Serial3
 
 // Objects creation
-  MotorControl __motor__[2];
-  LS7366Counter __encoder__[2];
-  AudioPlayer __audio__;
-  SRF04Sonar __sonar__[2];
-  DisplayLCD __display__;
+  Robus __Robus__;
   ArduinoX __AX__;
-  Servo __servo__[2];
-
-  VexQuadEncoder __vex__;
   SoftTimer __timer__[MAX_N_TIMER];
+  AudioPlayer __audio__;
+  DisplayLCD __display__;
+  VexQuadEncoder __vex__;
 
 // Global variables
-  // Servomotors
-  const uint8_t __SERVO_PINS__[2] = {4, 7};
-  const uint8_t __SERVO_RANGE__[2] = {0, 180}; // 0 to 180 degree
   // Bluetooth
   void (*BT_func)() = NULL;
   String BlUETOOTH_MSG = "";
-  // Sonars
-  const uint8_t __SONAR_ECHO_PINS__[2] = {22, 24};
-  const uint8_t __SONAR_TRIG_PINS__[2] = {23, 25};
 
 
 /** Function to initialize most variables to use in code
@@ -70,24 +48,12 @@ General librairies for Robus robot
 void BoardInit(){
   // Initialize debug communication on Serial0
   Serial.begin(BAUD_RATE_SERIAL0);
-  // Motors init
-  __motor__[LEFT].init(6, 31);
-  __motor__[RIGHT].init(5, 30);
-
-  // Encoders init
-  __encoder__[LEFT].init(35, A15);
-  __encoder__[RIGHT].init(34, A14);
   
-  // Sonars
-  __sonar__[0].init(__SONAR_ECHO_PINS__[0], __SONAR_TRIG_PINS__[0]);
-  __sonar__[1].init(__SONAR_ECHO_PINS__[1], __SONAR_TRIG_PINS__[1]);
-
   // Init ArduinoX
   __AX__.init();
 
-  // Servos
-  __servo__[0].attach(__SERVO_PINS__[0]); // Fonction SERVO_Enable n'existe pas
-  __servo__[1].attach(__SERVO_PINS__[1]);
+  // Init Robus
+  __Robus__.init();
 };
 
 /** Function to initialize audio variables
@@ -120,14 +86,7 @@ identification of the motor (LEFT(0) or RIGHT(1))
 floating value between [-1.0, 1.0]
 */
 void MOTOR_SetSpeed(uint8_t id, float speed){
-  if(id<0 || id>1){
-    Serial.println("Invalid motor id!");
-    return;
-  }
-  if(id==1){
-    speed *= -1; // left motor is inverted
-  }
-  __motor__[id].setSpeed(speed);
+  __AX__.setSpeedMotor(id, speed);
 };
 
 
@@ -139,15 +98,7 @@ identification of the motor (LEFT(0) or RIGHT(1))
 @return number of pulses on a int32 [–2147483648, 2147483647]
 */
 int32_t ENCODER_Read(uint8_t id){
-  if(id<0 || id>1){
-    Serial.println("Invalid encoder id!");
-    return 0;
-  }
-  if(id == 0){
-    return -__encoder__[id].read();// Left motor is inverted
-  }else{
-    return __encoder__[id].read();
-  }
+  return __AX__.readEncoder(id);
 };
 
 /** Function to reinitialize the number of pulses on counter
@@ -156,11 +107,7 @@ int32_t ENCODER_Read(uint8_t id){
 identification of the motor (LEFT(0) or RIGHT(1))
 */
 void ENCODER_Reset(uint8_t id){
-  if(id<0 || id>1){
-    Serial.println("Invalid encoder id!");
-    return;
-  }
-  __encoder__[id].reset();// Reset counter
+  __AX__.resetEncoder(id);
 };
 
 /** Function to read the number of pulses from a counter, then reset its value
@@ -171,15 +118,7 @@ identification of the motor (LEFT(0) or RIGHT(1))
 @return number of pulses on a int32 [–2147483648, 2147483647]
 */
 int32_t ENCODER_ReadReset(uint8_t id){
-  if(id<0 || id>1){
-    Serial.println("Invalid encoder id!");
-    return 0;
-  }
-  if(id){
-    return -__encoder__[id].readReset();// Rigth motor is inverted
-  }else{
-    return __encoder__[id].readReset();
-  }
+  return __AX__.readResetEncoder(id);
 };
 
 /** Function to play an audio track on mp3 player
@@ -256,11 +195,7 @@ identification of the sonar
 Estimation of the range in meters.
 */
 float SONAR_GetRange(uint8_t id){
-  if(id<0 || id>1){
-    Serial.println("Invalid sonar id!");
-    return 0;
-  }
-  return __sonar__[id].getRange();
+  return __Robus__.getRangeSonar(id);
 };
 
 /** Function to set cursor position
@@ -359,8 +294,8 @@ index of the desired bumper (LEFT:0, RIGHT:1, FRONT:2, REAR:3)
 
 return true if bumper is pressed, else false
 */
-bool AX_IsBumper(uint8_t id){
-  return __AX__.isBumper(id);
+bool ROBUS_IsBumper(uint8_t id){
+  return __Robus__.isBumper(id);
 };
 
 /** Function to raw imput fromt infrared captor
@@ -369,8 +304,8 @@ index of the desired IR module [0, 3]
 
 return number on 16bits
 */
-uint16_t AX_ReadIR(uint8_t id){
-  return __AX__.readIR(id);
+uint16_t ROBUS_ReadIR(uint8_t id){
+  return __Robus__.readIR(id);
 };
 
 
@@ -379,11 +314,7 @@ uint16_t AX_ReadIR(uint8_t id){
 index of the desired servomotor [0, 1]
 */
 void SERVO_Enable(uint8_t id){
-  if(id >= 0 && id < 2){
-      __servo__[id].attach(__SERVO_PINS__[id]);
-  }else{
-    Serial.println("Invalid servo id!");
-  }
+  __Robus__.enableServo(id);
 }
 
 /** Function to disable a servomotor
@@ -391,11 +322,7 @@ void SERVO_Enable(uint8_t id){
 index of the desired servomotor [0, 1]
 */
 void SERVO_Disable(uint8_t id){
-  if(id >= 0 && id < 2){
-      __servo__[id].detach();
-  }else{
-    Serial.println("Invalid servo id!");
-  }
+  __Robus__.disableServo(id);
 }
 
 /** Function to set angle to a Servomotor
@@ -408,15 +335,7 @@ index of the desired servomotor [0, 1]
 An angle value in the range defined in global variable
 */
 void SERVO_SetAngle(uint8_t id, uint8_t angle){
-  if(id<0 || id>1){
-    Serial.println("Invalid servo id!");
-  return;
-  }
-  if(angle < __SERVO_RANGE__[0] || angle > __SERVO_RANGE__[1]){
-    Serial.println("Servo angle is out of range!");
-  return;
-  }
-  __servo__[id].write(angle);
+  __Robus__.setAngleServo(id, angle);
 }
 
 /** Function to set a callback to a timer

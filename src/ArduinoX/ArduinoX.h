@@ -10,7 +10,12 @@ Class to interface some of the ArduinoX "on board" functionnalities
 
 #include <Arduino.h>
 #include <Adafruit_INA219.h> // For power usage statistics
+#include <MotorControl/MotorControl.h>
+#include <LS7366Counter/LS7366Counter.h>
 
+
+#define LEFT 0
+#define RIGHT 1
 class ArduinoX
 {
   public:
@@ -73,30 +78,52 @@ class ArduinoX
     */
     bool isLowBat();
 
-    /** Method to verify if a certain bumper is pressed
-
+    /** Method to set speed (direction and pwm) to a motor drive
+    
     @param id
-    the id of the disired bumper (0: left, 1:rigth, 2:front, 3:rear)
-
-    @return true, if bumper is pressed.
+    identification of motor [0,1]
+    
+    @param speed
+    speed to send to the drive [-1.0, 1.0]
     */
-    bool isBumper(uint8_t id);
+    void setSpeedMotor(uint8_t id, float speed);
 
-    /** Method to read the analog value comming from the IR module
-
+    /** Method read the count of pulses from a quadrature encoder
+    
     @param id
-    the id of the disired bumper (0: left, 1:rigth, 2:front, 3:rear)
-
-    @return IR_value [0 1023] (in practice it stalls at around 512).
+    identification of encoder [0,1]
+    
+    @return number of pulses
     */
-    uint16_t readIR(uint8_t id);
+    int32_t readEncoder(uint8_t id);
+
+    /** Method read the count of pulses from a quadrature encoder
+     * then reset the counter.
+    
+    @param id
+    identification of encoder [0,1]
+    
+    @return number of pulses
+    */
+    int32_t readResetEncoder(uint8_t id);
+    
+    /** Method read reset the count of pulses to zero
+    
+    @param id
+    identification of encoder [0,1]
+    */
+    void resetEncoder(uint8_t id);
 
   private:
     const uint8_t LOWBAT_PIN =  12;
     const uint8_t BUZZER_PIN =  36;
-    const uint8_t BUMPER_PIN[4] =  {27, 29, 26, 28};// (0: left, 1:rigth, 2:front, 3:rear)
-    const uint8_t IR_PIN[4] =  {A0, A1, A2, A3};
+    const uint8_t MOTOR_PWM_PIN[2] =  {6, 5};
+    const uint8_t MOTOR_DIR_PIN[2] =  {31, 30};
+    const uint8_t COUNTER_SLAVE_PIN[2] =  {35, 34};
+    const uint8_t COUNTER_FLAG_PIN[2] =  {A15, A14};
     Adafruit_INA219 ina219;
+    MotorControl __motor__[2];
+    LS7366Counter __encoder__[2];
 
 };
 #endif //ArduinoX

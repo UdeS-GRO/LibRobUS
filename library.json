@@ -10,6 +10,10 @@
       },
       {
         "name": "Jonathan Vincent"
+      },
+      {
+        "name": "Serge Caron",
+        "maintainer": true
       }
   
     ],
@@ -18,5 +22,5 @@
       {"name": "Adafruit INA219"},
       {"name": "LiquidCrystal_I2C"}
     ],
-    "version": "1.0.2"
+    "version": "1.0.3"
   }
