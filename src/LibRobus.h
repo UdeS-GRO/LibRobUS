@@ -6,6 +6,7 @@ General librairies for Robus robot
 */
 #ifndef LibRobus_H_
 #define LibRobus_H_
+#define SERVOTIMER5 // Pour utiliser le compteur 1 pour les servomoteurs
 
 // Includes
   // Custom librairies
@@ -15,6 +16,7 @@ General librairies for Robus robot
   #include <DisplayLCD/DisplayLCD.h>
   #include <VexQuadEncoder/VexQuadEncoder.h>
   #include <SoftTimer/SoftTimer.h>
+  #include <IRremote/IRremote.h>
 
 
 // Defines
@@ -23,11 +25,13 @@ General librairies for Robus robot
 #define FRONT 2
 #define REAR 3
 
-#define MAX_N_TIMER 5 // Nombre maximum de Chronometres
+#define MAX_N_TIMER 10 // Nombre maximum de Chronometres
 #define BAUD_RATE_SERIAL0 9600
 #define BAUD_RATE_BLUETOOTH 115200
 #define SerialBT Serial2
 #define SerialAudio Serial3
+#define IR_RECV_PIN 35
+
 
 // Objects creation
   Robus __Robus__;
@@ -36,11 +40,13 @@ General librairies for Robus robot
   AudioPlayer __audio__;
   DisplayLCD __display__;
   VexQuadEncoder __vex__;
+  IRrecv __irrecv__(IR_RECV_PIN);
 
 // Global variables
   // Bluetooth
   void (*BT_func)() = NULL;
   String BlUETOOTH_MSG = "";
+  decode_results IR_MSG;
 
 
 /** Function to initialize most variables to use in code
@@ -54,6 +60,9 @@ void BoardInit(){
 
   // Init Robus
   __Robus__.init();
+
+  // init telecommande
+  __irrecv__.enableIRIn(); // Start the receiver
 };
 
 /** Function to initialize audio variables
@@ -254,27 +263,23 @@ float AX_GetCurrent(){
 void AX_BuzzerON(){
   __AX__.buzzerOn();
 };
-
 /** Function turn on the onboard buzzer
 @param freq
 frequency of a 50% dutycycle square wave
 */
 void AX_BuzzerON(uint32_t freq){
-  __AX__.buzzerFreq(freq);
+  __AX__.buzzerOn(freq);
 };
 
 /** Function turn on the onboard buzzer
 @param freq
 frequency of a 50% dutycycle square wave
-
 @param duration
 time (ms) buzzer is active
 */
 void AX_BuzzerON(uint32_t freq, uint64_t duration){
-  __AX__.buzzerFreq(freq, duration);
+  __AX__.buzzerOn(freq, duration);
 };
-
-
 /** Function turn off the onboard buzzer
 */
 void AX_BuzzerOFF(){
@@ -490,6 +495,21 @@ String BLUETOOTH_read(){
     }
   return inputString;
 }
+
+/** Function to write a message to Bluetooth module
+@note for Sunfounder Serial Bluetooth
+
+@param msg
+a string message to be sent via bluetooth to paired
+*/
+uint32_t REMOTE_read(){
+  if (__irrecv__.decode(&IR_MSG)) {
+    __irrecv__.resume(); // Receive the next value
+    Serial.println(IR_MSG.value);
+    return IR_MSG.value;
+  }
+  return 0;
+};
 
 /** allow inline printing (c++ style);
 */

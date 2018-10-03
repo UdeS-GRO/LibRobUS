@@ -27,22 +27,14 @@ class ArduinoX
     */
     void buzzerOn();
 
-    /** Method to turn on the buzzer periodically for a certain duration
-
-    @param freq
-    Frequency at which the buzzer is triggered (50% duty cycle)
-
-    @param duration
-    Duration of the pulses (in milliseconds)
+    /** Method to turn on the buzzer at a frequency
     */
-    void buzzerFreq(uint32_t freq, uint64_t duration);
+    void buzzerOn(uint32_t freq);
 
-    /** Method to turn on the buzzer periodically and indefinitely
-
-    @param freq
-    Frequency at which the buzzer is triggered (50% duty cycle)
+    /** Method to turn on the buzzer at a frequency for
+     * a certain duration
     */
-    void buzzerFreq(uint32_t freq);
+    void buzzerOn(uint32_t freq, uint64_t duration);
 
     /** Method to turn off the buzzer
     */

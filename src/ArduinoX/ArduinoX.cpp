@@ -22,12 +22,12 @@ void ArduinoX::buzzerOn(){
   digitalWrite(BUZZER_PIN, HIGH);
 }
 
-void ArduinoX::buzzerFreq(uint32_t freq, uint64_t duration){
-  tone(BUZZER_PIN, freq, duration);
+void ArduinoX::buzzerOn(uint32_t freq){
+  tone(BUZZER_PIN, freq);
 }
 
-void ArduinoX::buzzerFreq(uint32_t freq){
-  tone(BUZZER_PIN, freq);
+void ArduinoX::buzzerOn(uint32_t freq, uint64_t duration){
+  tone(BUZZER_PIN, freq, duration);
 }
 
 void ArduinoX::buzzerOff(){

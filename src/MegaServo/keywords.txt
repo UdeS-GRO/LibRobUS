@@ -1,0 +1,23 @@
+#######################################
+# Syntax Coloring Map MegaServo
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+MegaServo  KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+attach KEYWORD2
+detach KEYWORD2
+write KEYWORD2
+read KEYWORD2
+read_us KEYWORD2
+attached KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
