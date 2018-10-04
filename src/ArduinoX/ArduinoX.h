@@ -13,7 +13,6 @@ Class to interface some of the ArduinoX "on board" functionnalities
 #include <MotorControl/MotorControl.h>
 #include <LS7366Counter/LS7366Counter.h>
 
-
 #define LEFT 0
 #define RIGHT 1
 class ArduinoX

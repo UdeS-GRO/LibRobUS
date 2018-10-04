@@ -6,16 +6,17 @@ General librairies for Robus robot
 */
 #ifndef LibRobus_H_
 #define LibRobus_H_
-#define SERVOTIMER5 // Pour utiliser le compteur 1 pour les servomoteurs
 
 // Includes
-  // Custom librairies
+  // Custom libraries
   #include <Robus/Robus.h>
   #include <ArduinoX/ArduinoX.h>
   #include <AudioPlayer/AudioPlayer.h>
   #include <DisplayLCD/DisplayLCD.h>
   #include <VexQuadEncoder/VexQuadEncoder.h>
   #include <SoftTimer/SoftTimer.h>
+
+  // Third party libraries
   #include <IRremote/IRremote.h>
 
 
@@ -30,7 +31,7 @@ General librairies for Robus robot
 #define BAUD_RATE_BLUETOOTH 115200
 #define SerialBT Serial2
 #define SerialAudio Serial3
-#define IR_RECV_PIN 35
+#define IR_RECV_PIN 37
 
 
 // Objects creation
@@ -505,7 +506,7 @@ a string message to be sent via bluetooth to paired
 uint32_t REMOTE_read(){
   if (__irrecv__.decode(&IR_MSG)) {
     __irrecv__.resume(); // Receive the next value
-    Serial.println(IR_MSG.value);
+    // Serial.println(IR_MSG.value);
     return IR_MSG.value;
   }
   return 0;
