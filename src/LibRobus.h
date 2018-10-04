@@ -31,7 +31,11 @@ General librairies for Robus robot
 #define BAUD_RATE_BLUETOOTH 115200
 #define SerialBT Serial2
 #define SerialAudio Serial3
+<<<<<<< HEAD
 #define IR_RECV_PIN 37
+=======
+#define IR_RECV_PIN 35	/* TODO Change pin number because pin number 35 is reserved for encoder 2 */
+>>>>>>> b0eeeb0b142e6af51079ef6e8244dac3aebeb230
 
 
 // Objects creation
@@ -63,7 +67,8 @@ void BoardInit(){
   __Robus__.init();
 
   // init telecommande
-  __irrecv__.enableIRIn(); // Start the receiver
+  /* TODO uncomment when "IR_RECV_PIN" is fixed */
+  //__irrecv__.enableIRIn(); // Start the receiver
 };
 
 /** Function to initialize audio variables
