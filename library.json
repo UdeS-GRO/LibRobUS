@@ -1,6 +1,6 @@
 {
     "name":"LibRobus",
-    "description":"Library for Université de Sherbrooke robot",
+    "description":"Library for Université de Sherbrooke Robus robot",
     "keywords":"robus",
     "authors":
     [
@@ -23,5 +23,5 @@
       {"name": "LiquidCrystal_I2C"}
 
     ],
-    "version": "1.0.4"
+    "version": "1.0.5"
   }

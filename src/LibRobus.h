@@ -282,6 +282,7 @@ time (ms) buzzer is active
 void AX_BuzzerON(uint32_t freq, uint64_t duration){
   __AX__.buzzerOn(freq, duration);
 };
+
 /** Function turn off the onboard buzzer
 */
 void AX_BuzzerOFF(){
@@ -314,7 +315,6 @@ return number on 16bits
 uint16_t ROBUS_ReadIR(uint8_t id){
   return __Robus__.readIR(id);
 };
-
 
 /** Function to enable a servomotor
 @param id
@@ -498,11 +498,10 @@ String BLUETOOTH_read(){
   return inputString;
 }
 
-/** Function to write a message to Bluetooth module
-@note for Sunfounder Serial Bluetooth
+/** Function to return decoded ir message
 
-@param msg
-a string message to be sent via bluetooth to paired
+@return code on a uint32_t
+
 */
 uint32_t REMOTE_read(){
   if (__irrecv__.decode(&IR_MSG)) {

@@ -13,7 +13,7 @@ void Robus::init(){
   }
   for(uint8_t id = 0; id < 2; id++){
     enableServo(id);
-    __sonar__[id].init(__SONAR_ECHO_PINS__[id], __SONAR_ECHO_PINS__[id]);
+    __sonar__[id].init(__SONAR_ECHO_PINS__[id], __SONAR_TRIG_PINS__[id]);
   }
 }
 
