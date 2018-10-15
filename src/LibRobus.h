@@ -63,8 +63,7 @@ void BoardInit(){
   __Robus__.init();
 
   // init telecommande
-  /* TODO uncomment when "IR_RECV_PIN" is fixed */
-  //__irrecv__.enableIRIn(); // Start the receiver
+  __irrecv__.enableIRIn(); // Start the receiver
 };
 
 /** Function to initialize audio variables
