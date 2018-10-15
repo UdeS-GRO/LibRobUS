@@ -499,6 +499,7 @@ String BLUETOOTH_read(){
 }
 
 /** Function to return decoded ir message
+@return 0 if no message
 
 @return code on a uint32_t
 
