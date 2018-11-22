@@ -34,56 +34,23 @@ General librairies for Robus robot
 #define IR_RECV_PIN 37
 
 
-// Objects creation
-  Robus __Robus__;
-  ArduinoX __AX__;
-  SoftTimer __timer__[MAX_N_TIMER];
-  AudioPlayer __audio__;
-  DisplayLCD __display__;
-  VexQuadEncoder __vex__;
-  IRrecv __irrecv__(IR_RECV_PIN);
-
-// Global variables
-  // Bluetooth
-  void (*BT_func)() = NULL;
-  String BlUETOOTH_MSG = "";
-  decode_results IR_MSG;
-
-
 /** Function to initialize most variables to use in code
 */
-void BoardInit(){
-  // Initialize debug communication on Serial0
-  Serial.begin(BAUD_RATE_SERIAL0);
-  
-  // Init ArduinoX
-  __AX__.init();
+void BoardInit();
 
-  // Init Robus
-  __Robus__.init();
-
-  // init telecommande
-  __irrecv__.enableIRIn(); // Start the receiver
-};
 
 /** Function to initialize audio variables
 */
-void AudioInit(){
-  __audio__.init(SerialAudio);
-}
+void AudioInit();
 
 /** Function to initialize Display variables
 */
-void DisplayInit(){
-  __display__.init();
-}
+void DisplayInit();
+
 
 /** Function to initialize Bluetooth variables
 */
-void BluetoothInit(){
-  // Init serial bluetooth
-  SerialBT.begin(BAUD_RATE_BLUETOOTH);
-}
+void BluetoothInit();
 
 
 
@@ -95,9 +62,7 @@ identification of the motor (LEFT(0) or RIGHT(1))
 @param speed, reprensents direction and amplitude of PWM
 floating value between [-1.0, 1.0]
 */
-void MOTOR_SetSpeed(uint8_t id, float speed){
-  __AX__.setSpeedMotor(id, speed);
-};
+void MOTOR_SetSpeed(uint8_t id, float speed);
 
 
 /** Function to read the number of pulses from the encoder counter
@@ -107,18 +72,14 @@ identification of the motor (LEFT(0) or RIGHT(1))
 
 @return number of pulses on a int32 [–2147483648, 2147483647]
 */
-int32_t ENCODER_Read(uint8_t id){
-  return __AX__.readEncoder(id);
-};
+int32_t ENCODER_Read(uint8_t id);
 
 /** Function to reinitialize the number of pulses on counter
 
 @param id
 identification of the motor (LEFT(0) or RIGHT(1))
 */
-void ENCODER_Reset(uint8_t id){
-  __AX__.resetEncoder(id);
-};
+void ENCODER_Reset(uint8_t id);
 
 /** Function to read the number of pulses from a counter, then reset its value
 
@@ -127,9 +88,7 @@ identification of the motor (LEFT(0) or RIGHT(1))
 
 @return number of pulses on a int32 [–2147483648, 2147483647]
 */
-int32_t ENCODER_ReadReset(uint8_t id){
-  return __AX__.readResetEncoder(id);
-};
+int32_t ENCODER_ReadReset(uint8_t id);
 
 /** Function to play an audio track on mp3 player
 This function is non-blocking
@@ -137,9 +96,7 @@ This function is non-blocking
 @param track
 the index of the track (in last modify order (starts from 1))
 */
-void AUDIO_Play(uint16_t track){
-  __audio__.play(track);
-};
+void AUDIO_Play(uint16_t track);
 
 /** Function to play an audio track on mp3 player
 This function is blocking(code will stay in this function until track is over)
@@ -147,56 +104,40 @@ This function is blocking(code will stay in this function until track is over)
 @param track
 the index of the track (in last modify order (starts from 1))
 */
-void AUDIO_PlayBlocking(uint16_t track){
-  __audio__.playBlocking(track);
-};
+void AUDIO_PlayBlocking(uint16_t track);
 
 /** Function to play next audio track on mp3 player
 */
-void AUDIO_Next(){
-  __audio__.next();
-};
+void AUDIO_Next();
 
 /** Function to play previous audio track on mp3 player
 */
-void AUDIO_Previous(){
-  __audio__.previous();
-};
+void AUDIO_Previous();
 
 /** Function to pause currently playing audio track on mp3 player
 */
-void AUDIO_Pause(){
-  __audio__.pause();
-};
+void AUDIO_Pause();
 
 /** Function to resume currently paused audio track on mp3 player
 */
-void AUDIO_Resume(){
-  __audio__.resume();
-};
+void AUDIO_Resume();
 
 /** Function to stop current audio track on mp3 player
 */
-void AUDIO_Stop(){
-  __audio__.stop();
-};
+void AUDIO_Stop();
 
 /** Function to poll the the state of the current track
 
 @return true if song is finished, else false
 */
-bool AUDIO_IsFinish(){
-  return __audio__.isFinished();
-};
+bool AUDIO_IsFinish();
 
 /** Function set the audio volume of the mp3 player
 
 @param Volume
 floating value between [0.0, 1.0]
 */
-void AUDIO_SetVolume(float volume){
-  __audio__.setVolume(volume);
-};
+void AUDIO_SetVolume(float volume);
 
 /** Function to estimate the range with the sonar
 @param id
@@ -204,9 +145,7 @@ identification of the sonar
 @return range
 Estimation of the range in meters.
 */
-float SONAR_GetRange(uint8_t id){
-  return __Robus__.getRangeSonar(id);
-};
+float SONAR_GetRange(uint8_t id);
 
 /** Function to set cursor position
 @note For I2C 4x20 LCD display
@@ -217,9 +156,7 @@ row index [0, 3]
 @param column
 column index [0, 19]
 */
-void DISPLAY_SetCursor(uint8_t row, uint8_t column){
-  __display__.setCursor(column,row);
-};
+void DISPLAY_SetCursor(uint8_t row, uint8_t column);
 
 /** Function to print message at the cursor position
 @note For I2C 4x20 LCD display
@@ -227,50 +164,36 @@ void DISPLAY_SetCursor(uint8_t row, uint8_t column){
 @param msg
 Alphanumeric string message
 */
-void DISPLAY_Printf(String msg){
-  __display__.print(msg);
-};
+void DISPLAY_Printf(String msg);
 
 /** Function to move cursor to beginning of next row
 @note For I2C 4x20 LCD display
 */
-void DISPLAY_NewLine(){
-  __display__.newLine();
-};
+void DISPLAY_NewLine();
 
 /** Function to clear the display
 @note For I2C 4x20 LCD display
 */
-void DISPLAY_Clear(){
-  __display__.clear();
-};
+void DISPLAY_Clear();
 
 /** Function that return the voltage input of ArduinoX
 @return volatge in V
 */
-float AX_GetVoltage(){
-  return __AX__.getVoltage();
-};
+float AX_GetVoltage();
 
 /** Function that return the current input of ArduinoX
 @return current in mA
 */
-float AX_GetCurrent(){
-  return __AX__.getCurrent();
-};
+float AX_GetCurrent();
 
 /** Function turn on the onboard buzzer
 */
-void AX_BuzzerON(){
-  __AX__.buzzerOn();
-};
+void AX_BuzzerON();
 /** Function turn on the onboard buzzer
 @param freq
 frequency of a 50% dutycycle square wave
 */
-void AX_BuzzerON(uint32_t freq){
-  __AX__.buzzerOn(freq);
-};
+void AX_BuzzerON(uint32_t freq);
 
 /** Function turn on the onboard buzzer
 @param freq
@@ -278,22 +201,16 @@ frequency of a 50% dutycycle square wave
 @param duration
 time (ms) buzzer is active
 */
-void AX_BuzzerON(uint32_t freq, uint64_t duration){
-  __AX__.buzzerOn(freq, duration);
-};
+void AX_BuzzerON(uint32_t freq, uint64_t duration);
 
 /** Function turn off the onboard buzzer
 */
-void AX_BuzzerOFF(){
-  __AX__.buzzerOff();
-};
+void AX_BuzzerOFF();
 
 /** Function to inquire the battery level
 return true if batterie is low, else false
 */
-bool AX_IsLowBat(){
-  return __AX__.isLowBat();
-};
+bool AX_IsLowBat();
 
 /** Function to inquire a bumber state
 @param id
@@ -301,9 +218,7 @@ index of the desired bumper (LEFT:0, RIGHT:1, FRONT:2, REAR:3)
 
 return true if bumper is pressed, else false
 */
-bool ROBUS_IsBumper(uint8_t id){
-  return __Robus__.isBumper(id);
-};
+bool ROBUS_IsBumper(uint8_t id);
 
 /** Function to raw imput fromt infrared captor
 @param id
@@ -311,25 +226,19 @@ index of the desired IR module [0, 3]
 
 return number on 16bits
 */
-uint16_t ROBUS_ReadIR(uint8_t id){
-  return __Robus__.readIR(id);
-};
+uint16_t ROBUS_ReadIR(uint8_t id);
 
 /** Function to enable a servomotor
 @param id
 index of the desired servomotor [0, 1]
 */
-void SERVO_Enable(uint8_t id){
-  __Robus__.enableServo(id);
-}
+void SERVO_Enable(uint8_t id);
 
 /** Function to disable a servomotor
 @param id
 index of the desired servomotor [0, 1]
 */
-void SERVO_Disable(uint8_t id){
-  __Robus__.disableServo(id);
-}
+void SERVO_Disable(uint8_t id);
 
 /** Function to set angle to a Servomotor
 @note The servo must be enable before
@@ -340,9 +249,7 @@ index of the desired servomotor [0, 1]
 @param angle
 An angle value in the range defined in global variable
 */
-void SERVO_SetAngle(uint8_t id, uint8_t angle){
-  __Robus__.setAngleServo(id, angle);
-}
+void SERVO_SetAngle(uint8_t id, uint8_t angle);
 
 /** Function to set a callback to a timer
 
@@ -352,13 +259,7 @@ index of the timer [0, MAX_N_TIMER-1]
 @param function to set
 A function that returns void with no parameters
 */
-void SOFT_TIMER_SetCallback(uint8_t id, void (*func)()){
-  if(id<0 || id>MAX_N_TIMER){
-    Serial.println("Invalid timer id!");
-    return;
-  }
-  __timer__[id].setCallback(func);
-};
+void SOFT_TIMER_SetCallback(uint8_t id, void (*func)());
 
 /** Function to set a delay between callback of a timer
 
@@ -368,13 +269,7 @@ index of the timer [0, MAX_N_TIMER-1]
 @param delay
 delay in millisecond between call
 */
-void SOFT_TIMER_SetDelay(uint8_t id, unsigned long delay){
-  if(id<0 || id>MAX_N_TIMER){
-    Serial.println("Invalid timer id!");
-    return;
-  }
-  __timer__[id].setDelay(delay);
-};
+void SOFT_TIMER_SetDelay(uint8_t id, unsigned long delay);
 
 /** Function to a number of repetition of the callback before desabling it
 
@@ -385,50 +280,28 @@ index of the timer [0, MAX_N_TIMER-1]
 number of repetition
 @note if nrep is negative or is not set, the timer will run forever (default);
 */
-void SOFT_TIMER_SetRepetition(uint8_t id, int32_t nrep){
-  if(id<0){
-    Serial.println("Invalid timer id!");
-    return;
-  }
-  __timer__[id].setRepetition(nrep);
-};
+void SOFT_TIMER_SetRepetition(uint8_t id, int32_t nrep);
 
 /** Function to a enable a timer
 
 @param id
 index of the timer [0, MAX_N_TIMER-1]
 */
-void SOFT_TIMER_Enable(uint8_t id){
-  if(id<0 || id>MAX_N_TIMER){
-    Serial.println("Invalid timer id!");
-    return;
-  }
-  __timer__[id].enable();
-};
+void SOFT_TIMER_Enable(uint8_t id);
 
 /** Function to a disable a timer
 
 @param id
 index of the timer [0, MAX_N_TIMER-1]
 */
-void SOFT_TIMER_Disable(uint8_t id){
-  if(id<0 || id>MAX_N_TIMER){
-    Serial.println("Invalid timer id!");
-    return;
-  }
-  __timer__[id].disable();
-};
+void SOFT_TIMER_Disable(uint8_t id);
 
 
 /** Function to call a callback if callTime_ is passed for a timer
 
 @note the next callTime_ and nRep_ is computed if necessary
 */
-void SOFT_TIMER_Update(){
-  for(uint8_t id = 0; id<MAX_N_TIMER; id++){
-    __timer__[id].update();
-  };
-};
+void SOFT_TIMER_Update();
 
 /** Function to write a message to Bluetooth module
 @note for Sunfounder Serial Bluetooth
@@ -436,9 +309,7 @@ void SOFT_TIMER_Update(){
 @param msg
 a string message to be sent via bluetooth to paired
 */
-void BLUETOOTH_print(String msg){
-  SerialBT.print(msg);
-};
+void BLUETOOTH_print(String msg);
 
 /** Function to write a message to Bluetooth module with a end line
 @note for Sunfounder Serial Bluetooth, will send right away
@@ -446,9 +317,7 @@ void BLUETOOTH_print(String msg){
 @param msg
 a string message to be sent via bluetooth to paired
 */
-void BLUETOOTH_println(String msg){
-  SerialBT.println(msg);
-};
+void BLUETOOTH_println(String msg);
 
 /** Function to set callback when data from BlueTooth
 @note for Sunfounder Serial Bluetooth
@@ -456,46 +325,24 @@ void BLUETOOTH_println(String msg){
 @param f
 a void fonction without parameters
 */
-void BLUETOOTH_setCallback(void (*f)()){
-  BT_func = f;
-};
+void BLUETOOTH_setCallback(void (*f)());
 
 
 /** Function called when data on Serial2
 */
-void serialEvent2(){
-  BT_func();
-};
+void serialEvent2();
 
 /** Function that defines the default callback when data is receive from bluetooth
 @note this can be used as a callback
 
 */
-void BLUETOOTH_readCallback(){
-  String inputString;
-  while (SerialBT.available()) {
-    // get the new byte:
-    char inChar = (char)SerialBT.read();
-    // add it to the inputString:
-    inputString += inChar;
-    }
-  BlUETOOTH_MSG = inputString;
-}
+void BLUETOOTH_readCallback();
 
 /** Function that defines the default callback when data is receive from bluetooth
 
 @return the received string
 */
-String BLUETOOTH_read(){
-  String inputString;
-  while (SerialBT.available()) {
-    // get the new byte:
-    char inChar = (char)SerialBT.read();
-    // add it to the inputString:
-    inputString += inChar;
-    }
-  return inputString;
-}
+String BLUETOOTH_read();
 
 /** Function to return decoded ir message
 @return 0 if no message
@@ -503,14 +350,7 @@ String BLUETOOTH_read(){
 @return code on a uint32_t
 
 */
-uint32_t REMOTE_read(){
-  if (__irrecv__.decode(&IR_MSG)) {
-    __irrecv__.resume(); // Receive the next value
-    // Serial.println(IR_MSG.value);
-    return IR_MSG.value;
-  }
-  return 0;
-};
+uint32_t REMOTE_read();
 
 /** allow inline printing (c++ style);
 */
