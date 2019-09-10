@@ -9,7 +9,7 @@ General librairies for displaying LCD like a terminal
 #define DisplayLCD_H_
 
 #include <Arduino.h>
-#include <LiquidCrystal_I2C.h>
+#include <LiquidCrystal_I2C/LiquidCrystal_I2C.h>
 
 
 

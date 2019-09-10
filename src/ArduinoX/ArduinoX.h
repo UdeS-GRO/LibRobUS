@@ -9,7 +9,7 @@ Class to interface some of the ArduinoX "on board" functionnalities
 #define ArduinoX_H_
 
 #include <Arduino.h>
-#include <Adafruit_INA219.h> // For power usage statistics
+#include <Adafruit_INA219/Adafruit_INA219.h> // For power usage statistics
 #include <MotorControl/MotorControl.h>
 #include <LS7366Counter/LS7366Counter.h>
 

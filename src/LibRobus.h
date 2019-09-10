@@ -8,16 +8,16 @@ General librairies for Robus robot
 #define LibRobus_H_
 
 // Includes
-  // Custom libraries
-  #include <Robus/Robus.h>
-  #include <ArduinoX/ArduinoX.h>
-  #include <AudioPlayer/AudioPlayer.h>
-  #include <DisplayLCD/DisplayLCD.h>
-  #include <VexQuadEncoder/VexQuadEncoder.h>
-  #include <SoftTimer/SoftTimer.h>
+// Custom libraries
+#include <Robus/Robus.h>
+#include <ArduinoX/ArduinoX.h>
+#include <AudioPlayer/AudioPlayer.h>
+#include <DisplayLCD/DisplayLCD.h>
+#include <VexQuadEncoder/VexQuadEncoder.h>
+#include <SoftTimer/SoftTimer.h>
 
-  // Third party libraries
-  #include <IRremote/IRremote.h>
+// Third party libraries
+#include <IRremote/IRremote.h>
 
 
 // Defines
