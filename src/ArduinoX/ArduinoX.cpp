@@ -82,7 +82,7 @@ int32_t ArduinoX::readResetEncoder(uint8_t id){
     Serial.println("Invalid encoder id!");
     return 0;
   }
-  if(id){
+  if(id == 0){
     return -__encoder__[id].readReset();// Left motor is inverted
   }else{
     return __encoder__[id].readReset();
